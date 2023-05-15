@@ -43,12 +43,17 @@ public class Service {
             }
 
             ArrayList<SimplifiedRepository> simplifiedRepositories = parseRepositoryPojoToSimplifiedRepository(filteredRepositories);
+            Pagination pagination = new Pagination(simplifiedRepositories);
             // TODO: Colocar números mágicos em constantes
-            if(requestParams.getPagina() != 0 || requestParams.getPorPagina() != 0) {
-                // TODO: implementar a paginação
-            }
+            if(requestParams.getPagina() != 0 && requestParams.getPorPagina() != 0) {
+                List paginetedList = pagination.getItemsByPage(requestParams.getPagina(), requestParams.getPorPagina());
 
-            return new ResponseEntity<>(new Gson().toJson(simplifiedRepositories), HttpStatus.OK);
+                return new ResponseEntity<>(new Gson().toJson(paginetedList), HttpStatus.OK);
+            } else {
+                List paginetedList = pagination.getFirstPage();
+                return new ResponseEntity<>(new Gson().toJson(paginetedList), HttpStatus.OK);
+
+            }
         } catch (IOException e) {
             Map<String, Object> map = Map.ofEntries(Map.entry("mensagem", "Ocorreu um erro em nossos servidores. Estamos trabalhando nisso!"));
 
