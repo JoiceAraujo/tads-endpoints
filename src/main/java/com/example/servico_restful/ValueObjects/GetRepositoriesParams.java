@@ -1,14 +1,14 @@
-package com.example.servico_restful.RouteParamsModels;
+package com.example.servico_restful.ValueObjects;
 
-public class GetRepositoriesRequest {
+public class GetRepositoriesParams {
     private String nome;
     private int pagina;
-    private int porPagina;
+    private int por_pagina;
 
-    public GetRepositoriesRequest(String nome, int pagina, int porPagina) {
+    public GetRepositoriesParams(String nome, int pagina, int por_pagina) {
         this.nome = nome;
         this.pagina = pagina;
-        this.porPagina = porPagina;
+        this.por_pagina = por_pagina;
     }
 
     public String getNome() {
@@ -19,6 +19,6 @@ public class GetRepositoriesRequest {
         return pagina;
     }
     public int getPorPagina() {
-        return porPagina;
+        return por_pagina;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.servico_restful;
+package com.example.servico_restful.Utils;
 
 import java.util.*;
 
@@ -9,18 +9,19 @@ public class Pagination {
     private int totalPages;
     private int totalItems;
 
-    Pagination(List data) {
+    public Pagination(List data) {
         this.data = data;
         this.totalItems = data.size();
     }
 
     public List getItemsByPage(int page, int itemsPerPage) {
+        final int initialIndex = 0;
         this.page = page;
         this.itemsPerPage = itemsPerPage;
         this.totalPages = data.size() / itemsPerPage;
 
         if(page == 1) {
-            return data.subList(0, itemsPerPage);
+            return  getSublistByIndex(initialIndex, itemsPerPage);
         }
 
         if(page > totalPages && itemsPerPage < totalItems) {
@@ -34,12 +35,23 @@ public class Pagination {
 
         int startIndex = (this.page - 1) * itemsPerPage;
         int lastIndex = startIndex + itemsPerPage;
-        return data.subList(startIndex, lastIndex);
+        return getSublistByIndex(startIndex, lastIndex);
     }
 
     public List getFirstPage() {
+        final int initialIndex = 0;
         final int defaultItemsPerPage = 5;
 
-        return data.subList(0, defaultItemsPerPage);
+        return getSublistByIndex(initialIndex, defaultItemsPerPage);
+    }
+
+    private List getSublistByIndex(int initialIndex, int lastIndex) {
+        int startIndex = initialIndex > data.size() ? 0 : initialIndex;
+
+        if(data.size() >= lastIndex && startIndex < data.size()) {
+            return data.subList(startIndex, lastIndex);
+        } else {
+            return data.subList(startIndex, data.size());
+        }
     }
 }

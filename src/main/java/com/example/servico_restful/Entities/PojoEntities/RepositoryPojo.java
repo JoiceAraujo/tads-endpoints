@@ -1,18 +1,8 @@
-package com.example.servico_restful.ResponseModels;
-
-import com.example.servico_restful.PojoModels.RepositoryPojo;
+package com.example.servico_restful.Entities.PojoEntities;
 
 import java.util.Date;
 
-
-
-public class Repository {
-    public Repository(RepositoryPojo repositoryPojo) {
-        this.id = repositoryPojo.id;
-        this.assignable_users = repositoryPojo.assignable_users;
-        this.code_of_conduct = repositoryPojo.code_of_conduct;
-    }
-
+public class RepositoryPojo {
     public String id;
     public int assignable_users;
     public String code_of_conduct;
@@ -23,6 +13,7 @@ public class Repository {
     public String description;
     public int disk_usage;
     public int forks;
+    public String funding_links;
     public boolean has_issues_enabled;
     public boolean has_projects_enabled;
     public boolean has_wiki_enabled;
@@ -43,13 +34,16 @@ public class Repository {
     public int labels;
     public String languages;
     public String license_info;
+    public Object lock_reason;
     public int mentionable_users;
     public boolean merge_commit_allowed;
     public int milestones;
+    public Object mirror_url;
     public String name;
     public String name_with_owner;
     public String open_graph_image_url;
-    public Actor owner;
+    public String owner;
+    public Object parent;
     public String primary_language;
     public Date pushed_at;
     public int pull_requests;
@@ -59,9 +53,20 @@ public class Repository {
     public boolean squash_merge_allowed;
     public int stargazers;
     public int tags;
+    public Object template_repository;
     public Date updated_at;
     public String url;
     public boolean uses_custom_open_graph_image;
     public int vulnerability_alerts;
     public int watchers;
+
+    public boolean isNameRepositoryEqualsParam(String param) {
+        if(param.isBlank() || param.isEmpty()) return false;
+
+        if (this.name != null && !this.name.isEmpty()) {
+            return this.name.contains(param);
+        }
+
+        return false;
+    }
 }

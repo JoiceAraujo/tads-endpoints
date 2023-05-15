@@ -1,4 +1,4 @@
-package com.example.servico_restful.ResponseModels;
+package com.example.servico_restful.Entities;
 
 public class Actor {
   Actor() {}

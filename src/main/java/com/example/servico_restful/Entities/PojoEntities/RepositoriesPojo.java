@@ -1,4 +1,4 @@
-package com.example.servico_restful.PojoModels;
+package com.example.servico_restful.Entities.PojoEntities;
 
 import java.util.ArrayList;
 
