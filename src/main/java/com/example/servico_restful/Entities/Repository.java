@@ -11,6 +11,58 @@ public class Repository {
         this.id = repositoryPojo.id;
         this.assignable_users = repositoryPojo.assignable_users;
         this.code_of_conduct = repositoryPojo.code_of_conduct;
+        this.created_at = repositoryPojo.created_at;
+        this.database_id = repositoryPojo.database_id;
+        this.default_branch = repositoryPojo.default_branch;
+        this.delete_branch_on_merge = repositoryPojo.delete_branch_on_merge;
+        this.description = repositoryPojo.description;
+        this.disk_usage = repositoryPojo.disk_usage;
+        this.forks = repositoryPojo.forks;
+        this.has_issues_enabled = repositoryPojo.has_issues_enabled;
+        this.has_projects_enabled = repositoryPojo.has_projects_enabled;
+        this.has_wiki_enabled = repositoryPojo.has_wiki_enabled;
+        this.homepage_url = repositoryPojo.homepage_url;
+        this.is_archived = repositoryPojo.is_archived;
+        this.is_blank_issues_enabled = repositoryPojo.is_blank_issues_enabled;
+        this.is_disabled = repositoryPojo.is_disabled;
+        this.is_empty = repositoryPojo.is_empty;
+        this.is_fork = repositoryPojo.is_fork;
+        this.is_in_organization = repositoryPojo.is_in_organization;
+        this.is_locked = repositoryPojo.is_locked;
+        this.is_mirror = repositoryPojo.is_mirror;
+        this.is_private = repositoryPojo.is_private;
+        this.is_security_policy_enabled = repositoryPojo.is_security_policy_enabled;
+        this.is_template = repositoryPojo.is_template;
+        this.is_user_configuration_repository = repositoryPojo.is_user_configuration_repository;
+        this.issues = repositoryPojo.issues;
+        this.labels = repositoryPojo.labels;
+        this.languages = repositoryPojo.languages;
+        this.license_info = repositoryPojo.license_info;
+        this.mentionable_users = repositoryPojo.mentionable_users;
+        this.merge_commit_allowed = repositoryPojo.merge_commit_allowed;
+        this.milestones = repositoryPojo.milestones;
+        this.name = repositoryPojo.name;
+        this.name_with_owner = repositoryPojo.name_with_owner;
+        this.open_graph_image_url = repositoryPojo.open_graph_image_url;
+        this.primary_language = repositoryPojo.primary_language;
+        this.pushed_at = repositoryPojo.pushed_at;
+        this.pull_requests = repositoryPojo.pull_requests;
+        this.rebase_merge_allowed = repositoryPojo.rebase_merge_allowed;
+        this.releases = repositoryPojo.releases;
+        this.repository_topics = repositoryPojo.repository_topics;
+        this.squash_merge_allowed = repositoryPojo.squash_merge_allowed;
+        this.stargazers = repositoryPojo.stargazers;
+        this.tags = repositoryPojo.tags;
+        this.updated_at = repositoryPojo.updated_at;
+        this.url = repositoryPojo.url;
+        this.uses_custom_open_graph_image = repositoryPojo.uses_custom_open_graph_image;
+        this.vulnerability_alerts = repositoryPojo.vulnerability_alerts;
+        this.watchers = repositoryPojo.watchers;
+        this.owner = new Actor(repositoryPojo.owner);
+    }
+
+    public void setOwner(Actor owner) {
+        this.owner = owner;
     }
 
     public String id;

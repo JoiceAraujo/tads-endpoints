@@ -40,7 +40,7 @@ public class Pagination {
 
     public List getFirstPage() {
         final int initialIndex = 0;
-        final int defaultItemsPerPage = 5;
+        final int defaultItemsPerPage = 10;
 
         return getSublistByIndex(initialIndex, defaultItemsPerPage);
     }
