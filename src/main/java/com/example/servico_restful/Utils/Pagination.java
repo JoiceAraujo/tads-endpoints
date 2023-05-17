@@ -38,13 +38,6 @@ public class Pagination {
         return getSublistByIndex(startIndex, lastIndex);
     }
 
-    public List getFirstPage() {
-        final int initialIndex = 0;
-        final int defaultItemsPerPage = 10;
-
-        return getSublistByIndex(initialIndex, defaultItemsPerPage);
-    }
-
     private List getSublistByIndex(int initialIndex, int lastIndex) {
         int startIndex = initialIndex > data.size() ? 0 : initialIndex;
 

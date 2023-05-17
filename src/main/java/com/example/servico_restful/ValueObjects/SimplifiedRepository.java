@@ -1,4 +1,4 @@
-package com.example.servico_restful.Entities;
+package com.example.servico_restful.ValueObjects;
 
 
 import com.example.servico_restful.Entities.PojoEntities.RepositoryPojo;

@@ -7,16 +7,15 @@ import com.example.servico_restful.Entities.Repository;
 import com.example.servico_restful.Utils.Constants;
 import com.example.servico_restful.Entities.PojoEntities.RepositoryPojo;
 import com.example.servico_restful.Entities.PojoEntities.RepositoriesPojo;
-import com.example.servico_restful.Entities.SimplifiedRepository;
+import com.example.servico_restful.ValueObjects.SimplifiedRepository;
 import com.example.servico_restful.Utils.Pagination;
-import com.example.servico_restful.ValueObjects.GetRepositoriesParams;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import org.apache.commons.io.FileUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -32,10 +31,14 @@ import java.util.stream.Collectors;
 @ResponseBody()
 @RequestMapping("/repos")
 public class RepositoryService {
-    @RequestMapping(method = RequestMethod.GET, consumes = {MediaType.APPLICATION_JSON_VALUE}, value = "/find", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/find", produces="application/json")
     // TODO: passar os parâmetros na rota
-    public @ResponseBody ResponseEntity getRepositories(@RequestBody GetRepositoriesParams requestParams) {
-        if(requestParams.getNome() != null && (requestParams.getNome().isEmpty() || requestParams.getNome().isBlank())) {
+    public @ResponseBody ResponseEntity<String> getRepositories(
+            @RequestParam(name = "nome") String repositoryName,
+            @RequestParam(name = "pagina", required = false, defaultValue = "1") String page,
+            @RequestParam(name = "por_pagina", required = false, defaultValue = "10") String perPage
+            ) {
+        if(repositoryName != null && (repositoryName.isEmpty() || repositoryName.isBlank())) {
             Map<String, Object> map = Map.ofEntries(Map.entry(Constants.KEY_MESSAGE, Constants.REQUIRED_NAME_PARAM_ERROR));
 
             return new ResponseEntity<>(new Gson().toJson(map), HttpStatus.BAD_REQUEST);
@@ -44,7 +47,7 @@ public class RepositoryService {
         try {
             String stringJson = readFile(Constants.JSON_REPOSITORIES_FILE_NAME);
             RepositoriesPojo repositoriesPojo = parseStringJsonToRepositoriesPojo(stringJson);
-            List<RepositoryPojo> filteredRepositories = filterRepositoryPojoByParam(requestParams.getNome(), repositoriesPojo);
+            List<RepositoryPojo> filteredRepositories = filterRepositoryPojoByParam(repositoryName, repositoriesPojo);
 
             if(filteredRepositories.isEmpty()) {
                 return new ResponseEntity<>(new Gson().toJson(new ArrayList<>()), HttpStatus.NO_CONTENT);
@@ -55,13 +58,7 @@ public class RepositoryService {
             Pagination pagination = new Pagination(simplifiedRepositories);
             ArrayList paginatedList = new ArrayList();
 
-            if(requestParams.getPagina() != Constants.INITIAL_VALUE_TO_PAGINATION_PARAMS &&
-                    requestParams.getPorPagina() != Constants.INITIAL_VALUE_TO_PAGINATION_PARAMS
-            ) {
-                paginatedList.addAll(pagination.getItemsByPage(requestParams.getPagina(), requestParams.getPorPagina()));
-            } else {
-                paginatedList.addAll(pagination.getFirstPage());
-            }
+            paginatedList.addAll(pagination.getItemsByPage(Integer.valueOf(page), Integer.valueOf(perPage)));
 
             return new ResponseEntity<>(new Gson().toJson(paginatedList), HttpStatus.OK);
         } catch (IOException e) {
@@ -70,7 +67,7 @@ public class RepositoryService {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "{repoId}", produces="application/json")
-    public @ResponseBody ResponseEntity getRepositoriesById(@PathVariable String repoId) {
+    public @ResponseBody ResponseEntity<String> getRepositoriesById(@PathVariable String repoId) {
         try {
             String repositoriesJson = readFile(Constants.JSON_REPOSITORIES_FILE_NAME);
             String actorsJson = readFile(Constants.JSON_ACTORS_FILE_NAME);
@@ -133,7 +130,7 @@ public class RepositoryService {
         return repositories;
     }
 
-    private ResponseEntity serverErrorResponse() {
+    private ResponseEntity<String> serverErrorResponse() {
         Map<String, Object> map = Map.ofEntries(Map.entry(Constants.KEY_MESSAGE, Constants.SERVER_ERROR_MESSAGE));
 
         return new ResponseEntity<>(new Gson().toJson(map), HttpStatus.INTERNAL_SERVER_ERROR);
