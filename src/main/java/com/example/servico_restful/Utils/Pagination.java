@@ -12,10 +12,11 @@ public class Pagination<T> {
     }
 
     public List<T> getItemsByPage(int page, int itemsPerPage) {
-        final int initialIndex = 0;
         int totalPages = data.size() / itemsPerPage;
 
         if(page == 1) {
+            int initialIndex = 0;
+
             return getSublistByIndex(initialIndex, itemsPerPage);
         }
 
@@ -28,7 +29,8 @@ public class Pagination<T> {
             return data;
         }
 
-        int startIndex = (page - 1) * itemsPerPage;
+        final int previousPage = page - 1;
+        int startIndex = previousPage * itemsPerPage;
         int lastIndex = startIndex + itemsPerPage;
         return getSublistByIndex(startIndex, lastIndex);
     }

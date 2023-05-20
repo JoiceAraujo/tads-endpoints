@@ -29,18 +29,19 @@ public class RepositoryService {
     @RequestMapping(method = RequestMethod.GET, value = "/find", produces="application/json")
     public @ResponseBody ResponseEntity<String> getRepositories(
             @RequestParam(name = "nome") String repositoryName,
-            @RequestParam(name = "pagina", required = false, defaultValue = "1") String page,
-            @RequestParam(name = "por_pagina", required = false, defaultValue = "10") String perPage
+            @RequestParam(name = "pagina", required = false, defaultValue = Constants.PAGE_DEFAULT_VALUE) int page,
+            @RequestParam(name = "por_pagina", required = false, defaultValue = Constants.PER_PAGE_DEFAULT_VALUE) int perPage
             ) {
         if(repositoryName != null && (repositoryName.isEmpty() || repositoryName.isBlank())) {
+
             return badRequest(Constants.REQUIRED_NAME_PARAM_ERROR);
         }
 
-        if(repositoryName.length() < 3) {
+        if(repositoryName.length() < Constants.MIN_SEARCH_TERM_LENGTH) {
             return badRequest(Constants.MIN_LENGTH_NAME_PARAM_ERROR);
         }
 
-        if(perPage != null && Integer.parseInt(perPage) > 25) {
+        if(perPage > Constants.MAX_PER_PAGE_LENGTH) {
             return badRequest(Constants.MAX_LENGTH_PER_PAGE_PARAM_ERROR);
         }
 
@@ -57,7 +58,7 @@ public class RepositoryService {
 
             Pagination<SimplifiedRepository> pagination = new Pagination<SimplifiedRepository>(simplifiedRepositories);
 
-            ArrayList<SimplifiedRepository> paginatedList = new ArrayList<SimplifiedRepository>(pagination.getItemsByPage(Integer.parseInt(page), Integer.parseInt(perPage)));
+            ArrayList<SimplifiedRepository> paginatedList = new ArrayList<SimplifiedRepository>(pagination.getItemsByPage(page, perPage));
 
             return new ResponseEntity<>(new Gson().toJson(paginatedList), HttpStatus.OK);
         } catch (IOException e) {

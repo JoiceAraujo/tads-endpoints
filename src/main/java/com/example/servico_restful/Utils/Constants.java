@@ -1,6 +1,10 @@
 package com.example.servico_restful.Utils;
 
 public class Constants {
+    public static final int MIN_SEARCH_TERM_LENGTH = 3;
+    public static final int MAX_PER_PAGE_LENGTH = 25;
+    public static final String PAGE_DEFAULT_VALUE = "1";
+    public static final String PER_PAGE_DEFAULT_VALUE = "10";
     public static final String KEY_MESSAGE = "mensagem";
     public static final String REQUIRED_NAME_PARAM_ERROR = "Nome é obrigatório!";
     public static final String MIN_LENGTH_NAME_PARAM_ERROR = "Nome precisa de pelo menos 3 caracteres para ser buscado!";
