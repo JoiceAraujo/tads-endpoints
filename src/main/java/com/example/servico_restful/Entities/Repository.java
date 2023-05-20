@@ -4,9 +4,59 @@ import com.example.servico_restful.Entities.PojoEntities.RepositoryPojo;
 
 import java.util.Date;
 
-
-
 public class Repository {
+    private final String id;
+    private final int assignable_users;
+    private final String code_of_conduct;
+    private final Date created_at;
+    private final int database_id;
+    private final String default_branch;
+    private final boolean delete_branch_on_merge;
+    private final String description;
+    private final int disk_usage;
+    private final int forks;
+    private final boolean has_issues_enabled;
+    private final boolean has_projects_enabled;
+    private final boolean has_wiki_enabled;
+    private final String homepage_url;
+    private final boolean is_archived;
+    private final boolean is_blank_issues_enabled;
+    private final boolean is_disabled;
+    private final boolean is_empty;
+    private final boolean is_fork;
+    private final boolean is_in_organization;
+    private final boolean is_locked;
+    private final boolean is_mirror;
+    private final boolean is_private;
+    private final boolean is_security_policy_enabled;
+    private final boolean is_template;
+    private final boolean is_user_configuration_repository;
+    private final int issues;
+    private final int labels;
+    private final String languages;
+    private final String license_info;
+    private final int mentionable_users;
+    private final boolean merge_commit_allowed;
+    private final int milestones;
+    private final String name;
+    private final String name_with_owner;
+    private final String open_graph_image_url;
+    private Actor owner;
+    private final String primary_language;
+    private final Date pushed_at;
+    private final int pull_requests;
+    private final boolean rebase_merge_allowed;
+    private final int releases;
+    private final String repository_topics;
+    private final boolean squash_merge_allowed;
+    private final int stargazers;
+    private final int tags;
+    private final Date updated_at;
+    private final String url;
+    private final boolean uses_custom_open_graph_image;
+    private final int vulnerability_alerts;
+    private final int watchers;
+
     public Repository(RepositoryPojo repositoryPojo) {
         this.id = repositoryPojo.id;
         this.assignable_users = repositoryPojo.assignable_users;
@@ -65,55 +115,7 @@ public class Repository {
         this.owner = owner;
     }
 
-    public String id;
-    public int assignable_users;
-    public String code_of_conduct;
-    public Date created_at;
-    public int database_id;
-    public String default_branch;
-    public boolean delete_branch_on_merge;
-    public String description;
-    public int disk_usage;
-    public int forks;
-    public boolean has_issues_enabled;
-    public boolean has_projects_enabled;
-    public boolean has_wiki_enabled;
-    public String homepage_url;
-    public boolean is_archived;
-    public boolean is_blank_issues_enabled;
-    public boolean is_disabled;
-    public boolean is_empty;
-    public boolean is_fork;
-    public boolean is_in_organization;
-    public boolean is_locked;
-    public boolean is_mirror;
-    public boolean is_private;
-    public boolean is_security_policy_enabled;
-    public boolean is_template;
-    public boolean is_user_configuration_repository;
-    public int issues;
-    public int labels;
-    public String languages;
-    public String license_info;
-    public int mentionable_users;
-    public boolean merge_commit_allowed;
-    public int milestones;
-    public String name;
-    public String name_with_owner;
-    public String open_graph_image_url;
-    public Actor owner;
-    public String primary_language;
-    public Date pushed_at;
-    public int pull_requests;
-    public boolean rebase_merge_allowed;
-    public int releases;
-    public String repository_topics;
-    public boolean squash_merge_allowed;
-    public int stargazers;
-    public int tags;
-    public Date updated_at;
-    public String url;
-    public boolean uses_custom_open_graph_image;
-    public int vulnerability_alerts;
-    public int watchers;
+    public Actor getOwner() {
+        return owner;
+    }
 }

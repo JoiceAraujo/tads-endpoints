@@ -2,26 +2,21 @@ package com.example.servico_restful.Utils;
 
 import java.util.*;
 
-public class Pagination {
-    private List data;
-    private int page;
-    private int itemsPerPage;
-    private int totalPages;
-    private int totalItems;
+public class Pagination<T> {
+    private final List<T> data;
+    private final int totalItems;
 
-    public Pagination(List data) {
+    public Pagination(List<T> data) {
         this.data = data;
         this.totalItems = data.size();
     }
 
-    public List getItemsByPage(int page, int itemsPerPage) {
+    public List<T> getItemsByPage(int page, int itemsPerPage) {
         final int initialIndex = 0;
-        this.page = page;
-        this.itemsPerPage = itemsPerPage;
-        this.totalPages = data.size() / itemsPerPage;
+        int totalPages = data.size() / itemsPerPage;
 
         if(page == 1) {
-            return  getSublistByIndex(initialIndex, itemsPerPage);
+            return getSublistByIndex(initialIndex, itemsPerPage);
         }
 
         if(page > totalPages && itemsPerPage < totalItems) {
@@ -33,12 +28,12 @@ public class Pagination {
             return data;
         }
 
-        int startIndex = (this.page - 1) * itemsPerPage;
+        int startIndex = (page - 1) * itemsPerPage;
         int lastIndex = startIndex + itemsPerPage;
         return getSublistByIndex(startIndex, lastIndex);
     }
 
-    private List getSublistByIndex(int initialIndex, int lastIndex) {
+    private List<T> getSublistByIndex(int initialIndex, int lastIndex) {
         int startIndex = initialIndex > data.size() ? 0 : initialIndex;
 
         if(data.size() >= lastIndex && startIndex < data.size()) {

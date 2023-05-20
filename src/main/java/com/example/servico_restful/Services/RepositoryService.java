@@ -11,11 +11,9 @@ import com.example.servico_restful.ValueObjects.SimplifiedRepository;
 import com.example.servico_restful.Utils.Pagination;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -24,24 +22,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-// TODO: Fazer uma resposta para rotas não encontradas
-// TODO: Tratar quando não passa nenhum parâmetro?
 @RestController
 @ResponseBody()
 @RequestMapping("/repos")
 public class RepositoryService {
     @RequestMapping(method = RequestMethod.GET, value = "/find", produces="application/json")
-    // TODO: passar os parâmetros na rota
     public @ResponseBody ResponseEntity<String> getRepositories(
             @RequestParam(name = "nome") String repositoryName,
             @RequestParam(name = "pagina", required = false, defaultValue = "1") String page,
             @RequestParam(name = "por_pagina", required = false, defaultValue = "10") String perPage
             ) {
         if(repositoryName != null && (repositoryName.isEmpty() || repositoryName.isBlank())) {
-            Map<String, Object> map = Map.ofEntries(Map.entry(Constants.KEY_MESSAGE, Constants.REQUIRED_NAME_PARAM_ERROR));
+            return badRequest(Constants.REQUIRED_NAME_PARAM_ERROR);
+        }
 
-            return new ResponseEntity<>(new Gson().toJson(map), HttpStatus.BAD_REQUEST);
+        if(repositoryName.length() < 3) {
+            return badRequest(Constants.MIN_LENGTH_NAME_PARAM_ERROR);
+        }
+
+        if(perPage != null && Integer.parseInt(perPage) > 25) {
+            return badRequest(Constants.MAX_LENGTH_PER_PAGE_PARAM_ERROR);
         }
 
         try {
@@ -50,15 +50,14 @@ public class RepositoryService {
             List<RepositoryPojo> filteredRepositories = filterRepositoryPojoByParam(repositoryName, repositoriesPojo);
 
             if(filteredRepositories.isEmpty()) {
-                return new ResponseEntity<>(new Gson().toJson(new ArrayList<>()), HttpStatus.NO_CONTENT);
+                return noContent();
             }
 
             ArrayList<SimplifiedRepository> simplifiedRepositories = parseRepositoryPojoToSimplifiedRepository(filteredRepositories);
 
-            Pagination pagination = new Pagination(simplifiedRepositories);
-            ArrayList paginatedList = new ArrayList();
+            Pagination<SimplifiedRepository> pagination = new Pagination<SimplifiedRepository>(simplifiedRepositories);
 
-            paginatedList.addAll(pagination.getItemsByPage(Integer.valueOf(page), Integer.valueOf(perPage)));
+            ArrayList<SimplifiedRepository> paginatedList = new ArrayList<SimplifiedRepository>(pagination.getItemsByPage(Integer.parseInt(page), Integer.parseInt(perPage)));
 
             return new ResponseEntity<>(new Gson().toJson(paginatedList), HttpStatus.OK);
         } catch (IOException e) {
@@ -75,17 +74,11 @@ public class RepositoryService {
             RepositoriesPojo repositoriesPojo = parseStringJsonToRepositoriesPojo(repositoriesJson);
             ActorsPojo actorsPojo = parseStringJsonToActor(actorsJson);
 
-            Optional<RepositoryPojo> repositoryPojo = repositoriesPojo.repositories.stream()
-                    .filter(repository ->  repository.id.equals(repoId))
-                    .findFirst();
-            if(repositoryPojo.isEmpty()) {
-                return new ResponseEntity<>(new Gson().toJson(new ArrayList<>()), HttpStatus.NO_CONTENT);
-            }
+            Optional<RepositoryPojo> repositoryPojo = filterRepositoriesPojoById(repositoriesPojo, repoId);
+            if(repositoryPojo.isEmpty()) return noContent();
 
             Repository repository = new Repository(repositoryPojo.get());
-            Optional<ActorPojo> actorPojo = actorsPojo.actors.stream()
-                    .filter(actor -> actor.id.equals(repository.owner.getId()))
-                    .findFirst();
+            Optional<ActorPojo> actorPojo = findActorPojoByRepositoryOwnerId(actorsPojo, repository.getOwner().getId());
 
             if (actorPojo.isPresent()) {
                 ActorPojo actor = actorPojo.get();
@@ -98,6 +91,28 @@ public class RepositoryService {
         } catch (IOException e) {
             return serverErrorResponse();
         }
+    }
+
+    private Optional<ActorPojo> findActorPojoByRepositoryOwnerId(ActorsPojo actorsPojo, String repositoryOwnerId) {
+        return actorsPojo.actors.stream()
+                .filter(actor -> actor.id.equals(repositoryOwnerId))
+                .findFirst();
+    }
+
+    private Optional<RepositoryPojo> filterRepositoriesPojoById(RepositoriesPojo repositoriesPojo, String repoId) {
+        return repositoriesPojo.repositories.stream()
+                .filter(repository ->  repository.id.equals(repoId))
+                .findFirst();
+    }
+
+    private @ResponseBody ResponseEntity<String> badRequest(String error) {
+        Map<String, Object> map = Map.ofEntries(Map.entry(Constants.KEY_MESSAGE, error));
+
+        return new ResponseEntity<>(new Gson().toJson(map), HttpStatus.BAD_REQUEST);
+    }
+
+    private @ResponseBody ResponseEntity<String> noContent() {
+        return new ResponseEntity<>(new Gson().toJson(new ArrayList<>()), HttpStatus.NO_CONTENT);
     }
 
     private String readFile(String fileName) throws IOException {

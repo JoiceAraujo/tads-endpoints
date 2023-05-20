@@ -1,6 +1,11 @@
 package com.example.servico_restful.Entities;
 
 public class Actor {
+  private final String id;
+  private String type;
+  private String login;
+  private String avatar_url;
+
   Actor(String id) {
     this.id = id;
   }
@@ -15,9 +20,4 @@ public class Actor {
   public String getId() {
     return this.id;
   }
-
-  private String id;
-  private String type;
-  private String login;
-  private String avatar_url;
 }
